@@ -1,0 +1,23 @@
+{
+  "name": "KP Land Record Integrity — Patwari Ground Verification",
+  "short_name": "ځمکني تصدیق",
+  "description": "On-site land verification for KP Patwaris: GPS, camera and community witness capture, works offline.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#0b5c3f",
+  "lang": "ps",
+  "dir": "rtl",
+  "categories": ["government", "productivity", "utilities"],
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "New site visit", "url": "/?action=visit" },
+    { "name": "Offline queue", "url": "/?action=queue" }
+  ]
+}

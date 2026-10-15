@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="KP land record integrity">
+  <rect width="512" height="512" rx="96" fill="#0b5c3f"/>
+  <path d="M256 96l128 64v96c0 88-56 152-128 176-72-24-128-88-128-176v-96z" fill="#ffffff" opacity="0.14"/>
+  <path d="M256 118l108 54v84c0 76-48 130-108 152-60-22-108-76-108-152v-84z" fill="none" stroke="#ffffff" stroke-width="20" stroke-linejoin="round"/>
+  <path d="M196 292l44-46 34 34 60-64" fill="none" stroke="#ffffff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="256" cy="206" r="20" fill="#8ef0b8"/>
+</svg>

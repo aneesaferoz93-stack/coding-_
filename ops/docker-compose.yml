@@ -1,0 +1,56 @@
+# Province-scale deployment.
+#
+# For a single-district pilot you do not need any of this:
+#   cd backend && ../.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+# runs the whole thing on SQLite.
+#
+# This file exists for the moment the pilot grows past one box.
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: klri
+      POSTGRES_USER: klri
+      POSTGRES_PASSWORD: ${KLRI_DB_PASSWORD:?set KLRI_DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../db/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U klri -d klri"]
+      interval: 5s
+      retries: 20
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ../backend
+    environment:
+      KLRI_DATABASE_URL: postgresql+asyncpg://klri:${KLRI_DB_PASSWORD}@db:5432/klri
+      KLRI_GEO_ENGINE: postgis
+      KLRI_ACTIVE_PHASE: ${KLRI_ACTIVE_PHASE:-PHASE_1_DUAL_RUN}
+      KLRI_PILOT_DISTRICTS: ${KLRI_PILOT_DISTRICTS:-PESHAWAR,MARDAN,SWAT}
+      KLRI_EFARD_MODE: ${KLRI_EFARD_MODE:-simulated}
+      KLRI_EFARD_BASE_URL: ${KLRI_EFARD_BASE_URL:-}
+      KLRI_EFARD_API_KEY: ${KLRI_EFARD_API_KEY:-}
+      KLRI_LEDGER_SIGNING_KEY: ${KLRI_LEDGER_SIGNING_KEY:?set KLRI_LEDGER_SIGNING_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  pwa:
+    build:
+      context: ../pwa
+    environment:
+      # The service worker never caches /v1/, so an officer is never told a
+      # parcel is clear from a stale response.
+      VITE_API_BASE: /v1
+    ports:
+      - "5173:80"
+    restart: unless-stopped
+
+volumes:
+  pgdata:

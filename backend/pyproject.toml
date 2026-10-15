@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kp-land-integrity"
+version = "1.0.0"
+description = "KP Land Record Integrity & Fraud Prevention System — fraud detection and ground verification layer over the existing e-Fard portal"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "sqlalchemy>=2.0",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    "httpx>=0.27",
+    "shapely>=2.0",
+    "geoalchemy2>=0.14",
+    "asyncpg>=0.29",
+    "aiosqlite>=0.20",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23", "ruff>=0.4", "httpx>=0.27"]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+namespaces = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# E4/E7/E9 catch real bugs; F is pyflakes; I is import ordering; B catches the
+# classic Python footguns; SIM collapses needless nesting.
+# Deliberately NOT enabled: UP (name-normalisation churn across 60 files for
+# zero behaviour change) and anything opinionated about docstrings.
+select = ["E4", "E7", "E9", "F", "I", "B", "SIM"]
+ignore = [
+    "B008",    # FastAPI's Depends() in defaults is idiomatic, not a bug
+    "SIM108",  # ternary-if suggestions often hurt readability here
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E501"]
+"scripts/*" = ["E501", "B008"]
